@@ -2,7 +2,7 @@
 
 Time to first token matters most for RAG, because retrieved context makes prompts long.
 
-Usage: uv run local-llms/benchmark.py
+Usage: uv run benchmark.py
 """
 
 import time

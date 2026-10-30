@@ -1,6 +1,6 @@
 """Minimal RAG with no framework: chunk, embed, retrieve, generate.
 
-Usage: uv run rag/rag.py "How many vacation days do new hires get?"
+Usage: uv run rag.py "How many vacation days do new hires get?"
 """
 
 import sys
@@ -10,12 +10,13 @@ import numpy as np
 from fastembed import TextEmbedding
 from openai import OpenAI
 
+LLM_URL = "http://127.0.0.1:8080/v1"
 LLM_MODEL = "mlx-community/Qwen3.6-35B-A3B-4bit"
 EMBED_MODEL = "BAAI/bge-small-en-v1.5"
 DOCS_DIR = Path(__file__).parent / "docs"
 TOP_K = 3
 
-llm = OpenAI(base_url="http://127.0.0.1:8080/v1", api_key="not-needed")
+llm = OpenAI(base_url=LLM_URL, api_key="not-needed")
 embedder = TextEmbedding(EMBED_MODEL, cache_dir=str(Path.home() / ".cache" / "fastembed"))
 
 

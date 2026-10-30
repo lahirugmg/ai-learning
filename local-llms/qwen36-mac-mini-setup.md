@@ -96,7 +96,7 @@ curl http://localhost:8080/v1/chat/completions \
 
 > Thinking is on by default and counts toward `max_tokens`. Without the `chat_template_kwargs` line, this test uses all 100 tokens on thinking and returns `"content": null` with `"finish_reason": "length"`, which looks like a failure even though the server is fine.
 
-**Recorded:** Works? ☑  Tokens/sec: about 60–65 output (see [measured speed](#measured-speed))  Memory used: 19 GB after loading, 22 GB peak with a 9,000-token prompt (`footprint -p <pid>`, because `ps` leaves out most of this memory)
+**Recorded:** Works? ☑  Tokens/sec: about 55–65 output (see [measured speed](#measured-speed))  Memory used: 19 GB after loading, 22 GB peak with a 9,000-token prompt (`footprint -p <pid>`, because `ps` leaves out most of this memory)
 
 ---
 
@@ -177,7 +177,7 @@ Any tool that speaks the OpenAI API can use the server:
 
 Candidates: personal agent (OpenClaw / Hermes), aider, opencode, scripts.
 
-Scripts in this folder:
+Scripts in this folder, run from here with `uv run chat.py "Why is the sky blue?"` or `uv run benchmark.py`:
 - [chat.py](chat.py): a minimal API call with streaming
 - [benchmark.py](benchmark.py): measures time to first token and output speed
 
@@ -192,7 +192,7 @@ Tested on 2026-10-30 with `mlx-lm` 0.32.2.
 | Prompt caching | ✅ Works | Reused tokens appear in `usage.prompt_tokens_details.cached_tokens` |
 | Turning off thinking | ✅ Works | Add `"chat_template_kwargs": {"enable_thinking": false}` to the request |
 | Health check | ✅ Works | `GET /health` |
-| Embeddings (`/v1/embeddings`) | ❌ 404 | Needs a separate embedding model; [rag.py](../rag/rag.py) uses `bge-small-en-v1.5` |
+| Embeddings (`/v1/embeddings`) | ❌ 404 | Needs a separate embedding model, such as `bge-small-en-v1.5` through `fastembed` |
 | JSON mode (`response_format`) | ❌ Ignored | Returned plain prose with no error. Ask for JSON in the prompt and validate it in code |
 
 Defaults worth knowing:
@@ -213,7 +213,7 @@ To turn thinking off for every request, start the server with `--chat-template-a
 | 2,385 | 1.86 s | 62.0 tokens/s |
 | 9,387 | 6.25 s | 59.5 tokens/s |
 
-Longer prompts mostly add waiting before the first token, at roughly 1,500 prompt tokens per second. Output speed barely changes.
+Longer prompts mostly add waiting before the first token, at roughly 1,500 prompt tokens per second. Output speed barely changes. A second run the same day measured 54–57 tokens/s, so treat these numbers as rough.
 
 ---
 

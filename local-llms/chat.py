@@ -1,6 +1,6 @@
 """Call the local model through its OpenAI-compatible API.
 
-Usage: uv run local-llms/chat.py "Why is the sky blue?"
+Usage: uv run chat.py "Why is the sky blue?"
 """
 
 import sys
