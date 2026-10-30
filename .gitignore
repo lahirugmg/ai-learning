@@ -1,0 +1,50 @@
+# Secrets
+.env
+.env.*
+!.env.example
+.netrc
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+credentials*.json
+secrets*.json
+secrets*.yaml
+secrets*.yml
+secrets*.toml
+
+# Private data: any folder with this name stays on this machine
+private/
+
+# Model weights
+models/
+*.safetensors
+*.gguf
+*.onnx
+*.bin
+*.pt
+*.pth
+*.ckpt
+
+# Vector stores and other generated data
+chroma*/
+*.faiss
+*.db
+*.sqlite3
+*.log
+.cache/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Editors, macOS, and local Claude Code settings
+.vscode/
+.idea/
+.DS_Store
+.claude/settings.local.json
+CLAUDE.local.md

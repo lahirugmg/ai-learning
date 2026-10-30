@@ -1,0 +1,9 @@
+[project]
+name = "ai-learning"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "fastembed>=0.9.1",
+    "numpy>=2.5.4",
+    "openai>=3.41.0",
+]
