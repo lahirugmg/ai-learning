@@ -280,4 +280,4 @@ Put `.md` files in `docs/private/`. `rag.py` reads them, and this repo's `.gitig
 | `openai.APIConnectionError: Connection error.` | The LLM server isn't running | Start it (see [Setup](#setup)) |
 | `AttributeError: 'NoneType' object has no attribute 'strip'` | Thinking used all of `max_tokens` before any answer, and step 6 shows `finish_reason: length` | Raise `max_tokens`, or keep thinking off |
 | `IndexError: list index out of range` | No question was given | Pass the question in quotes |
-| VS Code says `Import "fastembed" could not be resolved` | VS Code is using a different Python environment | Run **Python: Select Interpreter** and choose `rag-basics/.venv/bin/python` |
+| VS Code says `Import "fastembed" could not be resolved` | VS Code is using a different Python environment | Run **Python: Select Interpreter** and choose `rag/basics/.venv/bin/python` |
