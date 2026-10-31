@@ -1,6 +1,6 @@
 # RAG from scratch
 
-Ask questions about your own documents using a local LLM. This folder builds retrieval-augmented generation (RAG) in about 70 lines of Python with no framework, so you can see and change every step.
+Ask questions about your own documents using a local LLM. This folder builds retrieval-augmented generation (RAG) in about 130 lines of Python with no framework. Every run prints what happens at each step, so you can follow a question all the way through and change any part of it.
 
 ## What RAG is
 
@@ -12,10 +12,12 @@ An LLM only knows what it learned in training, so it can't answer questions abou
 
 | Step | What happens | In `rag.py` |
 |------|--------------|-------------|
-| Chunk | Splits each document into paragraphs | `load_chunks()` |
-| Embed | Turns each chunk into 384 numbers (an embedding) that represent its meaning, so similar text gets similar numbers | `embedder.passage_embed()` |
-| Retrieve | Embeds the question, scores every chunk by cosine similarity (higher means closer in meaning), and keeps the best 3 | `retrieve()` |
-| Generate | Sends those chunks and the question to the LLM | `generate()` |
+| 1. Chunk | Splits each document into paragraphs | `load_chunks()` |
+| 2. Embed chunks | Turns each chunk into 384 numbers (an embedding) that represent its meaning, so similar text gets similar numbers | `embed_chunks()` |
+| 3. Embed question | Turns the question into 384 numbers with the same model, so it can be compared with the chunks | `retrieve()` |
+| 4. Retrieve | Scores every chunk by cosine similarity (higher means closer in meaning) and keeps the best 3 | `retrieve()` |
+| 5. Build prompt | Puts those chunks and the question into one prompt | `generate()` |
+| 6. Generate | Sends the prompt to the LLM and gets the answer | `generate()` |
 
 It uses two separate models. A small embedding model, `bge-small-en-v1.5`, finds the passages, and a large LLM writes the answer.
 
@@ -53,17 +55,78 @@ From this folder:
 uv run rag.py "How many vacation days do new hires get?"
 ```
 
-The first run installs the packages and downloads the embedding model (64 MB) to `~/.cache/fastembed`. You'll see the chunks it found, with their scores, and then the answer:
+The first run installs the packages and downloads the embedding model (64 MB) to `~/.cache/fastembed`. Every run prints the six steps, then the answer:
 
 ```
-Retrieved:
+[1/6] CHUNK: split each document into paragraphs
+  expenses.md: 4 chunk(s), longest 134 characters
+  security.md: 4 chunk(s), longest 108 characters
+  time-off.md: 4 chunk(s), longest 110 characters
+  Total: 12 chunks
+
+[2/6] EMBED CHUNKS: turn each chunk into numbers that represent its meaning
+  Model: BAAI/bge-small-en-v1.5, running inside this script
+  Result: 12 chunks x 384 numbers, 18 KB, 0.04s
+  First chunk: [0.021, -0.081, 0.032, -0.043, 0.002, ...] 384 numbers, length 1.000
+
+[3/6] EMBED QUESTION: turn the question into numbers with the same model
+  Question: How many vacation days do new hires get?
+  Vector: [-0.052, -0.028, -0.000, -0.064, 0.026, ...] 384 numbers, length 1.000
+
+[4/6] RETRIEVE: score 12 chunks against the question, keep the best 3
+  Score is cosine similarity: higher means closer in meaning.
   0.808  time-off.md: New hires receive 23 vacation days per year, increasing to 2...
   0.703  time-off.md: Unused vacation days roll over until March 31 of the followi...
   0.622  expenses.md: Employees get a one-time home office allowance of $475, whic...
+  ---- TOP_K = 3: chunks below this line are dropped ----
+  0.601  time-off.md: Every employee gets the second Friday of each month off, kno...
+  0.600  time-off.md: Sick leave is not capped, but a doctor's note is required fo...
+  0.570  expenses.md: Meals during business travel are reimbursed up to $62 per da...
+  0.559  expenses.md: Expense reports must be submitted through the Ledgerly app w...
+  0.547  expenses.md: Flights longer than 7 hours may be booked in premium economy...
+  0.477  security.md: Lost or stolen laptops must be reported to the Sentinel desk...
+  0.446  security.md: Passwords must be at least 16 characters long and are rotate...
+  0.409  security.md: Visitors to the Assembly Hall must be escorted at all times ...
+  0.406  security.md: Production robot firmware can only be deployed by engineers ...
+
+[5/6] BUILD PROMPT: this is everything the LLM will see
+  system:
+    Answer using only the context below and cite the source file in brackets. If the context does not contain the answer, say you don't know.
+
+    Context:
+    [time-off.md]
+    New hires receive 23 vacation days per year, increasing to 28 days after five years of service.
+
+    [time-off.md]
+    Unused vacation days roll over until March 31 of the following year, with a limit of 7 days.
+
+    [expenses.md]
+    Employees get a one-time home office allowance of $475, which can be claimed after the first 90 days.
+  user:
+    How many vacation days do new hires get?
+
+[6/6] GENERATE: send the prompt to the LLM and wait for its answer
+  Request: POST http://127.0.0.1:8080/v1/chat/completions
+  Settings: {'model': 'mlx-community/Qwen3.6-35B-A3B-4bit', 'temperature': 0.2, 'max_tokens': 500, 'extra_body': {'chat_template_kwargs': {'enable_thinking': False}}}
+  Response: 0.9s, finish_reason: stop
+  Tokens: 150 in the prompt, 16 generated
 
 Answer:
 New hires receive 23 vacation days per year [time-off.md].
 ```
+
+### What to look for in the logs
+
+| Log step | What it shows you |
+|----------|-------------------|
+| 1. Chunk | What the documents were split into. The longest chunk matters because the embedding model reads only about 512 tokens, roughly 2,500 characters of English |
+| 2. Embed chunks | Each chunk is now 384 numbers. A length of 1.000 means the vectors are normalized, which is why a plain dot product gives cosine similarity |
+| 3. Embed question | The question gets 384 numbers from the same model, which is what makes it comparable with the chunks |
+| 4. Retrieve | Every chunk, ranked (up to 15 rows). Look around the line: here the unrelated home office chunk (0.622) is kept, because `TOP_K` keeps 3 chunks however weak the third is |
+| 5. Build prompt | The exact text the LLM receives. If a fact isn't here, the LLM didn't get it from your documents |
+| 6. Generate | The settings sent, the time taken, and the tokens used. `finish_reason: stop` means the model finished, and `length` means it hit `max_tokens` |
+
+The first LLM call after a pause can be much slower. Two took 30 and 75 seconds here, and the calls right after them took under 2 seconds.
 
 ## How to test it
 
@@ -80,13 +143,13 @@ The files in `docs/` describe a made-up company, Acme Robotics, so correct answe
 
 Check the facts rather than the exact wording. The wording changes between runs, and the model sometimes leaves out the citation.
 
-**When an answer is wrong, the `Retrieved` list shows which half failed:**
-- If the right chunk isn't listed, retrieval failed. Look at chunking, the embedding model, or `TOP_K`.
-- If the right chunk is listed but the answer is still wrong, generation failed. Look at the prompt or the LLM.
+**When an answer is wrong, the logs show which half failed:**
+- If the right chunk is below the line in step 4, retrieval failed. Look at chunking, the embedding model, or `TOP_K`.
+- If the right chunk is above the line but the answer is still wrong, generation failed. Check what the LLM received in step 5, then look at the prompt or the LLM.
 
 ## Learn by experimenting
 
-Every experiment runs through `rag.py` and changes one thing. Edit the file, run it, then undo your edit with `git restore rag.py`. The results below come from one to three runs on the sample documents, so yours may differ a little.
+Every experiment runs through `rag.py` and changes one thing. Edit the file, run it, then undo your edit with `git restore rag.py`. Most of the results below come from one to three runs on the sample documents, so yours may differ a little.
 
 ### 1. See what RAG adds
 
@@ -100,7 +163,7 @@ system = (
 )
 ```
 
-Then run each question below twice: once with `TOP_K = 0`, so no chunks reach the LLM and the `Retrieved` list is empty, and once with `TOP_K = 3`.
+Then run each question below twice: once with `TOP_K = 0`, so no chunks reach the LLM and `Context:` is empty in step 5, and once with `TOP_K = 3`.
 
 ```bash
 uv run rag.py "How many vacation days do new hires get?"
@@ -122,7 +185,7 @@ Set `TOP_K = 1`, then ask "How many vacation days do new hires get, and how many
 
 **Result:** it answers 23 days but says the context doesn't cover rollover, because that fact is in a different chunk.
 
-Now ask "Do I get any extra days off each month?" The wrong paragraph ranks first, so `TOP_K = 1` answers "I don't know." With `TOP_K = 3`, the right paragraph comes second and the answer is correct.
+Now ask "Do I get any extra days off each month?" Step 4 shows why `TOP_K = 1` answers "I don't know.": the wrong paragraph ranks first at 0.669, and the right one sits just below the line at 0.645. With `TOP_K = 3`, the right paragraph is kept and the answer is correct.
 
 ### 3. Add a relevance cutoff
 
@@ -141,7 +204,7 @@ if not hits:
     sys.exit("No relevant documents found.")
 ```
 
-**Result:** the parental leave question now stops without calling the LLM. The gap is narrow, though, and an unrelated chunk scoring 0.622 still gets through on the vacation question.
+**Result:** the parental leave question now stops after step 4, without calling the LLM. The gap is narrow, though, and an unrelated chunk scoring 0.622 still reaches step 5 on the vacation question.
 
 ### 4. Change the prompt
 
@@ -160,7 +223,7 @@ Retrieval and the prompt do different jobs. Retrieval supplies the facts, and th
 
 ### 5. Try a long document
 
-Long documents show why chunking matters. An embedding model has a size limit, and `bge-small-en-v1.5` reads only about the first 512 tokens, ignoring the rest without warning.
+Long documents show why chunking matters. An embedding model has a size limit, and `bge-small-en-v1.5` reads only about the first 512 tokens, ignoring the rest without warning. Step 1 prints each file's longest chunk, so you can spot one past the limit.
 
 **Result:** in a test document of 120 paragraphs with a parking fee in the last one, the question "How much does a parking permit cost?" scored 0.427 against the whole document and 0.852 against that paragraph.
 
@@ -176,11 +239,13 @@ Set `EMBED_MODEL = "sentence-transformers/all-MiniLM-L6-v2"`.
 
 Delete the `extra_body` line and set `max_tokens=2000`.
 
-**Result:** the same answer took about 13 seconds and 746 tokens, instead of under a second. If you leave `max_tokens` at 500, thinking uses all of it and the script crashes before there's an answer.
+**Result:** step 6 now prints the model's reasoning. The answer was still correct, but five runs took 4–12 seconds and 220–700 tokens, instead of under a second and 16 tokens.
+
+Now set `max_tokens=500`. Thinking counts toward that limit, so the outcome changes between runs. In 5 of 8 runs it used all 500 tokens, step 6 showed `finish_reason: length`, and the script crashed because no answer was left. The other 3 finished in 219–338 tokens.
 
 ### 8. Use your own documents
 
-Put `.md` files in `docs/private/`. `rag.py` reads them, and this repo's `.gitignore` keeps any `private/` folder out of git. If you copy this folder into another repo, add `private/` to that repo's `.gitignore` too.
+Put `.md` files in `docs/private/`. `rag.py` reads them, and this repo's `.gitignore` keeps any `private/` folder out of git. If you copy this folder into another repo, add `private/` to that repo's `.gitignore` too. The logs print your documents' text, so don't paste them anywhere public.
 
 ## Limits of this version
 
@@ -213,6 +278,6 @@ Put `.md` files in `docs/private/`. `rag.py` reads them, and this repo's `.gitig
 | Problem | Cause | Fix |
 |---------|-------|-----|
 | `openai.APIConnectionError: Connection error.` | The LLM server isn't running | Start it (see [Setup](#setup)) |
-| `AttributeError: 'NoneType' object has no attribute 'strip'` | Thinking used all of `max_tokens` before any answer | Raise `max_tokens`, or keep thinking off |
+| `AttributeError: 'NoneType' object has no attribute 'strip'` | Thinking used all of `max_tokens` before any answer, and step 6 shows `finish_reason: length` | Raise `max_tokens`, or keep thinking off |
 | `IndexError: list index out of range` | No question was given | Pass the question in quotes |
-| VS Code says `Import "fastembed" could not be resolved` | VS Code is using a different Python environment | Run **Python: Select Interpreter** and choose `rag/.venv/bin/python` |
+| VS Code says `Import "fastembed" could not be resolved` | VS Code is using a different Python environment | Run **Python: Select Interpreter** and choose `rag-basics/.venv/bin/python` |
