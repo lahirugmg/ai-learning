@@ -1,0 +1,68 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 480" width="750" height="480"><!-- svg-source:excalidraw -->
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  </style>
+  <rect x="0" y="0" width="750" height="480" fill="#ffffff"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="375" y="32" font-size="20" fill="#0f172a" text-anchor="middle" font-weight="bold">A single neuron</text>
+
+  <!-- Input arrows and labels -->
+  <text x="30" y="140" font-size="15" fill="#0f172a" text-anchor="start">x₁ = 7</text>
+  <text x="10" y="158" font-size="12" fill="#64748b" text-anchor="start">(hours studied)</text>
+
+  <text x="30" y="310" font-size="15" fill="#0f172a" text-anchor="start">x₂ = 6</text>
+  <text x="10" y="328" font-size="12" fill="#64748b" text-anchor="start">(hours slept)</text>
+
+  <!-- Weight labels on arrows -->
+  <line x1="115" y1="140" x2="220" y2="200" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="145" y="155" font-size="13" fill="#7c3aed" font-weight="bold" transform="rotate(18, 145, 155)">× w₁ = 0.5</text>
+
+  <line x1="115" y1="310" x2="220" y2="245" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="145" y="298" font-size="13" fill="#7c3aed" font-weight="bold" transform="rotate(-18, 145, 298)">× w₂ = 0.3</text>
+
+  <!-- Bias arrow -->
+  <line x1="290" y1="120" x2="290" y2="185" stroke="#334155" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+  <text x="290" y="110" font-size="13" fill="#d97706" text-anchor="middle" font-weight="bold">+ bias = −3</text>
+
+  <!-- Neuron circle — the sum -->
+  <circle cx="290" cy="220" r="50" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+  <text x="290" y="213" font-size="13" fill="#0f172a" text-anchor="middle">Weighted</text>
+  <text x="290" y="232" font-size="13" fill="#0f172a" text-anchor="middle">Sum</text>
+
+  <!-- Arrow to activation -->
+  <line x1="340" y1="220" x2="420" y2="220" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="380" y="210" font-size="12" fill="#475569" text-anchor="middle">z = 2.3</text>
+
+  <!-- Activation function box -->
+  <rect x="425" y="185" width="120" height="70" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+  <text x="485" y="215" font-size="15" fill="#0f172a" text-anchor="middle" font-weight="bold">σ(z)</text>
+  <text x="485" y="240" font-size="12" fill="#475569" text-anchor="middle">sigmoid</text>
+
+  <!-- Arrow to output -->
+  <line x1="545" y1="220" x2="620" y2="220" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Output -->
+  <rect x="625" y="192" width="100" height="56" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="675" y="215" font-size="15" fill="#0f172a" text-anchor="middle" font-weight="bold">0.91</text>
+  <text x="675" y="236" font-size="12" fill="#475569" text-anchor="middle">output</text>
+
+  <!-- Math breakdown at the bottom -->
+  <rect x="60" y="340" width="630" height="120" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="375" y="368" font-size="15" fill="#0f172a" text-anchor="middle" font-weight="bold">Step by step</text>
+
+  <text x="90" y="396" font-size="14" fill="#334155" text-anchor="start">1. Multiply inputs by weights:</text>
+  <text x="360" y="396" font-size="14" fill="#475569" text-anchor="start">(7 × 0.5) + (6 × 0.3) = 3.5 + 1.8 = 5.3</text>
+
+  <text x="90" y="420" font-size="14" fill="#334155" text-anchor="start">2. Add the bias:</text>
+  <text x="360" y="420" font-size="14" fill="#475569" text-anchor="start">5.3 + (−3) = 2.3</text>
+
+  <text x="90" y="444" font-size="14" fill="#334155" text-anchor="start">3. Apply sigmoid:</text>
+  <text x="360" y="444" font-size="14" fill="#475569" text-anchor="start">σ(2.3) = 1 / (1 + e⁻²·³) = 0.91  →  91% chance of passing</text>
+</svg>
+

@@ -5,6 +5,7 @@ My AI learning work, with one folder per topic.
 | Folder | Topic |
 |--------|-------|
 | [local-llms](local-llms/) | Running Qwen 3.6 locally behind an OpenAI-compatible API |
+| [model-building](model-building/) | Building a deep neural network, then a tiny language model, by hand |
 | [rag](rag/) | RAG, from a first working version to more advanced techniques |
 
 ## Running the code

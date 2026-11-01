@@ -1,0 +1,98 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650" width="900" height="650"><!-- svg-source:excalidraw -->
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  </style>
+  <rect x="0" y="0" width="900" height="650" fill="#ffffff"/>
+  <defs>
+    <marker id="arrowR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="450" y="32" font-size="20" fill="#0f172a" text-anchor="middle" font-weight="bold">Backpropagation: how the network learns</text>
+
+  <!-- ===== FORWARD PASS (top half) ===== -->
+  <text x="450" y="65" font-size="14" fill="#2563eb" text-anchor="middle" font-weight="bold">→ Forward Pass (compute prediction)</text>
+
+  <!-- Input -->
+  <rect x="30" y="85" width="130" height="70" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="95" y="112" font-size="14" fill="#0f172a" text-anchor="middle" font-weight="bold">Input</text>
+  <text x="95" y="132" font-size="12" fill="#475569" text-anchor="middle">[7, 6] / 10</text>
+  <line x1="160" y1="120" x2="210" y2="120" stroke="#334155" stroke-width="2" marker-end="url(#arrowR)"/>
+
+  <!-- Hidden layer -->
+  <rect x="215" y="85" width="160" height="70" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+  <text x="295" y="112" font-size="14" fill="#0f172a" text-anchor="middle" font-weight="bold">Hidden Layer</text>
+  <text x="295" y="132" font-size="12" fill="#475569" text-anchor="middle">z₁ = X·W1+b1, ReLU</text>
+  <line x1="375" y1="120" x2="425" y2="120" stroke="#334155" stroke-width="2" marker-end="url(#arrowR)"/>
+
+  <!-- Output layer -->
+  <rect x="430" y="85" width="160" height="70" rx="8" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+  <text x="510" y="112" font-size="14" fill="#0f172a" text-anchor="middle" font-weight="bold">Output Layer</text>
+  <text x="510" y="132" font-size="12" fill="#475569" text-anchor="middle">z₂ = a₁·W2+b2, σ</text>
+  <line x1="590" y1="120" x2="640" y2="120" stroke="#334155" stroke-width="2" marker-end="url(#arrowR)"/>
+
+  <!-- Prediction -->
+  <rect x="645" y="85" width="100" height="70" rx="8" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+  <text x="695" y="112" font-size="14" fill="#0f172a" text-anchor="middle" font-weight="bold">ŷ = 0.91</text>
+  <text x="695" y="132" font-size="12" fill="#475569" text-anchor="middle">prediction</text>
+  <line x1="745" y1="120" x2="795" y2="120" stroke="#334155" stroke-width="2" marker-end="url(#arrowR)"/>
+
+  <!-- Loss -->
+  <rect x="800" y="85" width="80" height="70" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/>
+  <text x="840" y="112" font-size="14" fill="#dc2626" text-anchor="middle" font-weight="bold">Loss</text>
+  <text x="840" y="132" font-size="12" fill="#475569" text-anchor="middle">0.094</text>
+
+  <!-- True label -->
+  <text x="840" y="80" font-size="12" fill="#64748b" text-anchor="middle">y = 1</text>
+
+  <!-- ===== BACKWARD PASS (bottom half) ===== -->
+  <text x="450" y="210" font-size="14" fill="#dc2626" text-anchor="middle" font-weight="bold">← Backward Pass (compute gradients using the chain rule)</text>
+
+  <!-- Step 1 -->
+  <rect x="620" y="235" width="260" height="100" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="635" y="258" font-size="13" fill="#dc2626" font-weight="bold">Step 1: Output gradient</text>
+  <text x="635" y="280" font-size="12" fill="#334155">dL/dŷ = −(y/ŷ − (1−y)/(1−ŷ))</text>
+  <text x="635" y="300" font-size="12" fill="#475569">"How does loss change when</text>
+  <text x="635" y="318" font-size="12" fill="#475569"> the prediction changes?"</text>
+
+  <!-- Backward arrow 1 -->
+  <line x1="615" y1="285" x2="555" y2="285" stroke="#dc2626" stroke-width="2" marker-end="url(#arrowRed)"/>
+
+  <!-- Step 2 -->
+  <rect x="310" y="235" width="240" height="100" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="325" y="258" font-size="13" fill="#dc2626" font-weight="bold">Step 2: W2 + b2 gradients</text>
+  <text x="325" y="280" font-size="12" fill="#334155">dL/dW2 = a₁ᵀ × dL/dz₂</text>
+  <text x="325" y="300" font-size="12" fill="#475569">"How does loss change when</text>
+  <text x="325" y="318" font-size="12" fill="#475569"> each W2 weight changes?"</text>
+
+  <!-- Backward arrow 2 -->
+  <line x1="305" y1="285" x2="245" y2="285" stroke="#dc2626" stroke-width="2" marker-end="url(#arrowRed)"/>
+
+  <!-- Step 3 -->
+  <rect x="15" y="235" width="225" height="100" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="30" y="258" font-size="13" fill="#dc2626" font-weight="bold">Step 3: W1 + b1 gradients</text>
+  <text x="30" y="280" font-size="12" fill="#334155">dL/dW1 = Xᵀ × dL/dz₁</text>
+  <text x="30" y="300" font-size="12" fill="#475569">"How does loss change when</text>
+  <text x="30" y="318" font-size="12" fill="#475569"> each W1 weight changes?"</text>
+
+  <!-- ===== UPDATE (bottom) ===== -->
+  <text x="450" y="390" font-size="14" fill="#16a34a" text-anchor="middle" font-weight="bold">↓ Update Weights (gradient descent)</text>
+
+  <rect x="100" y="410" width="700" height="80" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <text x="450" y="440" font-size="15" fill="#0f172a" text-anchor="middle" font-weight="bold">W_new = W_old − learning_rate × gradient</text>
+  <text x="450" y="465" font-size="13" fill="#475569" text-anchor="middle">Move each weight a tiny step in the direction that reduces the loss. Then repeat.</text>
+  <text x="450" y="483" font-size="13" fill="#475569" text-anchor="middle">learning_rate = 1.0 (how big each step is — too big overshoots, too small is slow)</text>
+
+  <!-- Chain rule explanation -->
+  <rect x="100" y="510" width="700" height="120" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="450" y="537" font-size="14" fill="#0f172a" text-anchor="middle" font-weight="bold">Why "chain rule"?</text>
+  <text x="120" y="562" font-size="13" fill="#334155">To find dL/dW1, we can't jump directly from Loss to W1. Instead we chain:</text>
+  <text x="120" y="585" font-size="14" fill="#7c3aed" font-weight="bold">dL/dW1  =  dL/da₂  ×  da₂/dz₂  ×  dz₂/da₁  ×  da₁/dz₁  ×  dz₁/dW1</text>
+  <text x="120" y="612" font-size="12" fill="#475569">Each factor is easy to compute on its own. Multiply them together → gradient for W1.</text>
+</svg>
+

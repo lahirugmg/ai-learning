@@ -1,0 +1,101 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 1100" width="700" height="1100"><!-- svg-source:excalidraw -->
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  </style>
+  <rect x="0" y="0" width="700" height="1100" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="350" y="35" font-size="22" fill="#0f172a" text-anchor="middle" font-weight="bold">Transformer Architecture (forward pass)</text>
+
+  <!-- Box 1: Input Tokens -->
+  <rect x="175" y="60" width="350" height="85" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="350" y="90" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="bold">Input Tokens</text>
+  <text x="350" y="112" font-size="14" fill="#475569" text-anchor="middle">word IDs: [63, 13, 56, 42]</text>
+  <text x="350" y="130" font-size="14" fill="#475569" text-anchor="middle">4 integers from the tokenizer</text>
+  <!-- Arrow -->
+  <line x1="350" y1="145" x2="350" y2="175" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Box 2: Token Embedding -->
+  <rect x="175" y="175" width="350" height="85" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+  <text x="350" y="205" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="bold">Token Embedding</text>
+  <text x="350" y="227" font-size="14" fill="#475569" text-anchor="middle">each word ID → a vector of 64 numbers</text>
+  <text x="350" y="245" font-size="14" fill="#475569" text-anchor="middle">nn.Embedding(77, 64)</text>
+  <!-- Arrow -->
+  <line x1="350" y1="260" x2="350" y2="290" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Box 3: + Position Embedding -->
+  <rect x="175" y="290" width="350" height="85" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+  <text x="350" y="320" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="bold">+ Position Embedding</text>
+  <text x="350" y="342" font-size="14" fill="#475569" text-anchor="middle">adds position info so the model</text>
+  <text x="350" y="360" font-size="14" fill="#475569" text-anchor="middle">knows word order (position 0, 1, 2, 3)</text>
+  <!-- Arrow -->
+  <line x1="350" y1="375" x2="350" y2="405" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Transformer Block bracket -->
+  <rect x="155" y="395" width="390" height="280" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="6,4"/>
+  <text x="165" y="415" font-size="13" fill="#64748b">Transformer Block (×1)</text>
+
+  <!-- Box 4: Self-Attention -->
+  <rect x="175" y="425" width="350" height="100" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+  <text x="350" y="455" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="bold">Self-Attention</text>
+  <text x="350" y="477" font-size="14" fill="#475569" text-anchor="middle">each word looks at other words</text>
+  <text x="350" y="495" font-size="14" fill="#475569" text-anchor="middle">to understand context (Q, K, V matrices)</text>
+  <text x="350" y="513" font-size="12" fill="#94a3b8" text-anchor="middle">+ residual connection + LayerNorm</text>
+  <!-- Arrow -->
+  <line x1="350" y1="525" x2="350" y2="555" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Box 5: Feed-Forward Network -->
+  <rect x="175" y="555" width="350" height="100" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+  <text x="350" y="585" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="bold">Feed-Forward Network</text>
+  <text x="350" y="607" font-size="14" fill="#475569" text-anchor="middle">Linear(64→256) → ReLU → Linear(256→64)</text>
+  <text x="350" y="625" font-size="14" fill="#475569" text-anchor="middle">expands, applies nonlinearity, compresses</text>
+  <text x="350" y="643" font-size="12" fill="#94a3b8" text-anchor="middle">+ residual connection + LayerNorm</text>
+  <!-- Arrow -->
+  <line x1="350" y1="655" x2="350" y2="700" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Box 6: Take Last Position -->
+  <rect x="175" y="700" width="350" height="70" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+  <text x="350" y="728" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="bold">Take Last Position</text>
+  <text x="350" y="750" font-size="14" fill="#475569" text-anchor="middle">only the final word's vector predicts the next</text>
+  <!-- Arrow -->
+  <line x1="350" y1="770" x2="350" y2="800" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Box 7: Linear Head -->
+  <rect x="175" y="800" width="350" height="70" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+  <text x="350" y="828" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="bold">Linear Head</text>
+  <text x="350" y="850" font-size="14" fill="#475569" text-anchor="middle">64-dim vector → 77 logits (one per word in vocab)</text>
+  <!-- Arrow -->
+  <line x1="350" y1="870" x2="350" y2="900" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Box 8: Softmax -->
+  <rect x="175" y="900" width="350" height="70" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <text x="350" y="928" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="bold">Softmax</text>
+  <text x="350" y="950" font-size="14" fill="#475569" text-anchor="middle">logits → probabilities that sum to 1</text>
+  <!-- Arrow -->
+  <line x1="350" y1="970" x2="350" y2="1000" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Box 9: Output -->
+  <rect x="175" y="1000" width="350" height="70" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="350" y="1028" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="bold">Predicted Next Word</text>
+  <text x="350" y="1050" font-size="14" fill="#475569" text-anchor="middle">highest probability → "a" (after "the cat sat on")</text>
+
+  <!-- Legend -->
+  <rect x="558" y="60" width="16" height="16" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="580" y="73" font-size="13" fill="#0f172a">Input / Output</text>
+  <rect x="558" y="86" width="16" height="16" rx="3" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="580" y="99" font-size="13" fill="#0f172a">Embeddings</text>
+  <rect x="558" y="112" width="16" height="16" rx="3" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+  <text x="580" y="125" font-size="13" fill="#0f172a">Attention</text>
+  <rect x="558" y="138" width="16" height="16" rx="3" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+  <text x="580" y="151" font-size="13" fill="#0f172a">Linear / FF</text>
+  <rect x="558" y="164" width="16" height="16" rx="3" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="580" y="177" font-size="13" fill="#0f172a">Activation</text>
+
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+    </marker>
+  </defs>
+</svg>
+

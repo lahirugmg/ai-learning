@@ -1,0 +1,13 @@
+# Test data — the model has never seen these students.
+hours_studied,hours_slept,passed
+1,8,0
+3,7,0
+4,5,0
+5,6,1
+6,8,1
+7,4,1
+8,3,1
+9,7,1
+10,10,1
+2,3,0
+

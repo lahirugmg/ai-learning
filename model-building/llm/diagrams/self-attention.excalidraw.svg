@@ -1,0 +1,171 @@
+<!-- svg-source:excalidraw -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 800" width="900" height="800" style="background: #ffffff;">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&amp;display=swap');
+    text { font-family: 'Nunito', sans-serif; }
+  </style>
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <path d="M 0 0 L 8 3 L 0 6 Z" fill="#6b7280"/>
+    </marker>
+    <marker id="arrowhead-purple" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <path d="M 0 0 L 8 3 L 0 6 Z" fill="#7c3aed"/>
+    </marker>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- ==================== PART 1: What Self-Attention Does ==================== -->
+
+  <!-- Section Title -->
+  <rect x="30" y="18" width="840" height="38" rx="8" ry="8" fill="#f0fdf4" stroke="#86efac" stroke-width="2"/>
+  <text x="450" y="44" text-anchor="middle" font-size="17" font-weight="800" fill="#15803d" letter-spacing="0.5">Part 1 — What Self-Attention Does</text>
+
+  <!-- Word boxes row — "the", "cat", "sat", "on" -->
+  <!-- "the" -->
+  <rect x="115" y="82" width="100" height="48" rx="10" ry="10" fill="#f9fafb" stroke="#9ca3af" stroke-width="2" filter="url(#shadow)"/>
+  <text x="165" y="113" text-anchor="middle" font-size="20" font-weight="700" fill="#374151">"the"</text>
+
+  <!-- "cat" -->
+  <rect x="295" y="82" width="100" height="48" rx="10" ry="10" fill="#f9fafb" stroke="#9ca3af" stroke-width="2" filter="url(#shadow)"/>
+  <text x="345" y="113" text-anchor="middle" font-size="20" font-weight="700" fill="#374151">"cat"</text>
+
+  <!-- "sat" -->
+  <rect x="475" y="82" width="100" height="48" rx="10" ry="10" fill="#fef9c3" stroke="#f59e0b" stroke-width="2" filter="url(#shadow)"/>
+  <text x="525" y="113" text-anchor="middle" font-size="20" font-weight="700" fill="#92400e">"sat"</text>
+
+  <!-- "on" (greyed / masked) -->
+  <rect x="655" y="82" width="100" height="48" rx="10" ry="10" fill="#f3f4f6" stroke="#d1d5db" stroke-width="2" stroke-dasharray="6 4" filter="url(#shadow)"/>
+  <text x="705" y="113" text-anchor="middle" font-size="20" font-weight="700" fill="#9ca3af">"on"</text>
+  <!-- Mask label -->
+  <text x="705" y="76" text-anchor="middle" font-size="11" font-weight="600" fill="#ef4444">🚫 masked (future)</text>
+
+  <!-- Vector bars under each word -->
+  <!-- "the" vector -->
+  <rect x="130" y="140" width="14" height="28" rx="3" ry="3" fill="#fca5a5"/>
+  <rect x="148" y="140" width="14" height="28" rx="3" ry="3" fill="#86efac"/>
+  <rect x="166" y="140" width="14" height="28" rx="3" ry="3" fill="#93c5fd"/>
+  <rect x="184" y="140" width="14" height="28" rx="3" ry="3" fill="#fde68a"/>
+  <text x="165" y="183" text-anchor="middle" font-size="10" fill="#6b7280">embedding</text>
+
+  <!-- "cat" vector -->
+  <rect x="310" y="140" width="14" height="28" rx="3" ry="3" fill="#c4b5fd"/>
+  <rect x="328" y="140" width="14" height="28" rx="3" ry="3" fill="#fca5a5"/>
+  <rect x="346" y="140" width="14" height="28" rx="3" ry="3" fill="#86efac"/>
+  <rect x="364" y="140" width="14" height="28" rx="3" ry="3" fill="#fdba74"/>
+  <text x="345" y="183" text-anchor="middle" font-size="10" fill="#6b7280">embedding</text>
+
+  <!-- "sat" vector -->
+  <rect x="490" y="140" width="14" height="28" rx="3" ry="3" fill="#fde68a"/>
+  <rect x="508" y="140" width="14" height="28" rx="3" ry="3" fill="#c4b5fd"/>
+  <rect x="526" y="140" width="14" height="28" rx="3" ry="3" fill="#fca5a5"/>
+  <rect x="544" y="140" width="14" height="28" rx="3" ry="3" fill="#93c5fd"/>
+  <text x="525" y="183" text-anchor="middle" font-size="10" fill="#6b7280">embedding</text>
+
+  <!-- "on" vector (faded) -->
+  <rect x="670" y="140" width="14" height="28" rx="3" ry="3" fill="#e5e7eb"/>
+  <rect x="688" y="140" width="14" height="28" rx="3" ry="3" fill="#e5e7eb"/>
+  <rect x="706" y="140" width="14" height="28" rx="3" ry="3" fill="#e5e7eb"/>
+  <rect x="724" y="140" width="14" height="28" rx="3" ry="3" fill="#e5e7eb"/>
+
+  <!-- ===== Curved Attention Arrows from "sat" to previous words ===== -->
+
+  <!-- Arrow: sat → the (weight 0.1) — long curve -->
+  <path d="M 505,82 C 505,30 165,30 165,82" fill="none" stroke="#9ca3af" stroke-width="1.8" marker-end="url(#arrowhead)"/>
+  <rect x="303" y="18" width="40" height="22" rx="6" ry="6" fill="#fff" stroke="#d1d5db" stroke-width="1.5"/>
+  <text x="323" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="#6b7280">0.1</text>
+
+  <!-- Arrow: sat → cat (weight 0.7) — medium curve, thicker -->
+  <path d="M 510,82 C 510,44 345,44 345,82" fill="none" stroke="#f59e0b" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <rect x="400" y="38" width="40" height="24" rx="6" ry="6" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+  <text x="420" y="56" text-anchor="middle" font-size="14" font-weight="800" fill="#d97706">0.7</text>
+
+  <!-- Arrow: sat → sat (weight 0.2) — self-loop -->
+  <path d="M 540,82 C 560,55 570,55 545,82" fill="none" stroke="#9ca3af" stroke-width="1.8" marker-end="url(#arrowhead)"/>
+  <text x="572" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="#6b7280">0.2</text>
+
+  <!-- Insight callout -->
+  <rect x="70" y="200" width="760" height="40" rx="10" ry="10" fill="#eff6ff" stroke="#93c5fd" stroke-width="2"/>
+  <text x="450" y="221" text-anchor="middle" font-size="13" font-weight="600" fill="#1e40af">💡 "sat" pays most attention to "cat" (0.7) — each word decides how much to attend to every other word (that came before it)</text>
+  <text x="450" y="234" text-anchor="middle" font-size="11" fill="#3b82f6">Attention weights always sum to 1:  0.1 + 0.7 + 0.2 = 1.0</text>
+
+  <!-- ==================== Divider ==================== -->
+  <line x1="60" y1="260" x2="840" y2="260" stroke="#e5e7eb" stroke-width="1.5" stroke-dasharray="8 6"/>
+
+  <!-- ==================== PART 2: How It Computes Attention ==================== -->
+
+  <!-- Section Title -->
+  <rect x="30" y="275" width="840" height="38" rx="8" ry="8" fill="#faf5ff" stroke="#d8b4fe" stroke-width="2"/>
+  <text x="450" y="301" text-anchor="middle" font-size="17" font-weight="800" fill="#7c3aed" letter-spacing="0.5">Part 2 — How It Computes Attention</text>
+
+  <!-- ===== Q / K / V Boxes ===== -->
+
+  <!-- Query (Q) — Purple -->
+  <rect x="70" y="330" width="230" height="110" rx="14" ry="14" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
+  <text x="185" y="358" text-anchor="middle" font-size="22" font-weight="800" fill="#7c3aed">Q</text>
+  <text x="185" y="378" text-anchor="middle" font-size="14" font-weight="700" fill="#6d28d9">Query</text>
+  <line x1="110" y1="390" x2="260" y2="390" stroke="#ddd6fe" stroke-width="1"/>
+  <text x="185" y="410" text-anchor="middle" font-size="13" fill="#7c3aed" font-weight="600">"What am I</text>
+  <text x="185" y="428" text-anchor="middle" font-size="13" fill="#7c3aed" font-weight="600">looking for?"</text>
+
+  <!-- Key (K) — Amber -->
+  <rect x="335" y="330" width="230" height="110" rx="14" ry="14" fill="#fffbeb" stroke="#d97706" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="358" text-anchor="middle" font-size="22" font-weight="800" fill="#d97706">K</text>
+  <text x="450" y="378" text-anchor="middle" font-size="14" font-weight="700" fill="#b45309">Key</text>
+  <line x1="375" y1="390" x2="525" y2="390" stroke="#fde68a" stroke-width="1"/>
+  <text x="450" y="410" text-anchor="middle" font-size="13" fill="#d97706" font-weight="600">"What do I</text>
+  <text x="450" y="428" text-anchor="middle" font-size="13" fill="#d97706" font-weight="600">contain?"</text>
+
+  <!-- Value (V) — Blue -->
+  <rect x="600" y="330" width="230" height="110" rx="14" ry="14" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
+  <text x="715" y="358" text-anchor="middle" font-size="22" font-weight="800" fill="#2563eb">V</text>
+  <text x="715" y="378" text-anchor="middle" font-size="14" font-weight="700" fill="#1d4ed8">Value</text>
+  <line x1="640" y1="390" x2="790" y2="390" stroke="#bfdbfe" stroke-width="1"/>
+  <text x="715" y="410" text-anchor="middle" font-size="13" fill="#2563eb" font-weight="600">"What do I</text>
+  <text x="715" y="428" text-anchor="middle" font-size="13" fill="#2563eb" font-weight="600">actually say?"</text>
+
+  <!-- Connecting arrows from Q/K/V down to formula area -->
+  <path d="M 185,440 L 185,468" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arrowhead-purple)" stroke-dasharray="4 3"/>
+  <path d="M 450,440 L 450,468" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <path d="M 715,440 L 715,468" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+  <!-- ===== Formula Steps ===== -->
+
+  <!-- Step 1: Score -->
+  <rect x="55" y="475" width="370" height="80" rx="12" ry="12" fill="#faf5ff" stroke="#c4b5fd" stroke-width="2" filter="url(#shadow)"/>
+  <circle cx="82" cy="500" r="14" fill="#7c3aed"/>
+  <text x="82" y="505" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">1</text>
+  <text x="105" y="505" font-size="15" font-weight="700" fill="#581c87" text-anchor="start">Compute similarity</text>
+  <text x="105" y="530" font-size="20" font-weight="700" fill="#4c1d95" text-anchor="start" font-style="italic">score = Q · K / √64</text>
+  <text x="105" y="547" font-size="11" fill="#7c3aed" text-anchor="start">dot product measures how similar Q and K are</text>
+
+  <!-- Step 2: Weight -->
+  <rect x="445" y="475" width="395" height="80" rx="12" ry="12" fill="#fffbeb" stroke="#fcd34d" stroke-width="2" filter="url(#shadow)"/>
+  <circle cx="472" cy="500" r="14" fill="#d97706"/>
+  <text x="472" y="505" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">2</text>
+  <text x="495" y="505" font-size="15" font-weight="700" fill="#78350f" text-anchor="start">Normalize scores</text>
+  <text x="495" y="530" font-size="20" font-weight="700" fill="#92400e" text-anchor="start" font-style="italic">weight = softmax(score)</text>
+  <text x="495" y="547" font-size="11" fill="#d97706" text-anchor="start">squashes scores so they're positive &amp; sum to 1</text>
+
+  <!-- Arrow between step 1 and step 2 -->
+  <path d="M 425,515 L 445,515" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Step 3: Output -->
+  <rect x="185" y="575" width="530" height="80" rx="12" ry="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="2" filter="url(#shadow)"/>
+  <circle cx="212" cy="600" r="14" fill="#2563eb"/>
+  <text x="212" y="605" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">3</text>
+  <text x="235" y="605" font-size="15" font-weight="700" fill="#1e3a5f" text-anchor="start">Compute output</text>
+  <text x="235" y="632" font-size="20" font-weight="700" fill="#1e40af" text-anchor="start" font-style="italic">output = weight × V</text>
+  <text x="235" y="649" font-size="11" fill="#2563eb" text-anchor="start">weighted sum of values → the new, context-aware representation of the word</text>
+
+  <!-- Arrow from steps 1+2 to step 3 -->
+  <path d="M 370,555 L 370,575" stroke="#9ca3af" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- ===== Bottom summary / intuition box ===== -->
+  <rect x="55" y="680" width="790" height="95" rx="14" ry="14" fill="#f0fdf4" stroke="#86efac" stroke-width="2"/>
+  <text x="450" y="706" text-anchor="middle" font-size="15" font-weight="800" fill="#166534">🧠 Putting It All Together</text>
+  <text x="450" y="728" text-anchor="middle" font-size="13" fill="#15803d" font-weight="600">Each word creates its own Q, K, and V vectors (by multiplying its embedding by learned weight matrices).</text>
+  <text x="450" y="748" text-anchor="middle" font-size="13" fill="#15803d" font-weight="600">The Query asks "what's relevant to me?", Keys answer "here's what I offer", and the best-matching</text>
+  <text x="450" y="768" text-anchor="middle" font-size="13" fill="#15803d" font-weight="600">Values get combined into a new representation that captures context from the whole sentence.</text>
+</svg>

@@ -1,0 +1,13 @@
+[project]
+name = "build-llm"
+version = "0.1.0"
+description = "Build a tiny language model from scratch to understand how LLMs work"
+requires-python = ">=3.11"
+dependencies = [
+    "torch>=2.0",
+    "numpy>=1.24",
+    "matplotlib>=3.7",
+]
+
+[dependency-groups]
+dev = []
